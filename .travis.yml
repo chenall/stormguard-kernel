@@ -11,7 +11,9 @@ before_install:
 
 before_script:
 # Download the toolchain
-  - git clone https://github.com/techdro-id/aarch64-linux-android -b SDK24 $HOME/kernel/toolchain/SDK24
+  - git clone https://github.com/techdro-id/aarch64-linux-android -b SDK27 $HOME/kernel/toolchain/SDK27
+
+  - git clone https://github.com/techdro-id/build_scripts.git $HOME/kernel/compiled
 
   - git clone https://github.com/techdro-id/stormguard-kernel -b CAF $HOME/kernel/stormguard
 
@@ -21,9 +23,10 @@ before_script:
 
 script:
   - export ARCH=arm64
-  - export KERNELDIR=$HOME/kernel/stormguard
+  - export KERNELDIR=$HOME/kernel
+  - mkdir -p $HOME/kernel/compiled/MIUI
   - cd $KERNELDIR
-  - ./build
+  - bash compiled/build_miui
 
 notifications:
   email:
