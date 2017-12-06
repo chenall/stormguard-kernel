@@ -149,11 +149,6 @@ config CPU_FREQ_DEFAULT_GOV_ELECTRON
 	  loading your cpufreq low-level hardware driver, using the
 	  'electron' governor for latency-sensitive workloads.
 
-config CPU_FREQ_DEFAULT_GOV_ALUCARD
-	bool "alucard"
-	select CPU_FREQ_GOV_ALUCARD
-	help
-
 endchoice
 
 config CPU_FREQ_GOV_PERFORMANCE
