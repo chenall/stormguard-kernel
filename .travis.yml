@@ -11,7 +11,7 @@ before_install:
 
 before_script:
 # Download the toolchain
-  - git clone https://github.com/techdro-id/aarch64-linux-android -b SDK27 $HOME/kernel/toolchain/SDK27
+  - git clone https://github.com/techdro-id/aarch64-linux-android -b snapshot $HOME/kernel/toolchain/snapshot
 
   - git clone https://github.com/techdro-id/build_scripts.git $HOME/kernel/compiled
 
