@@ -15,7 +15,7 @@ before_script:
 
   - git clone https://github.com/techdro-id/build_scripts.git $HOME/kernel/compiled
 
-  - git clone --depth=50 --branch=CAF https://github.com/techdro-id/stormguard-kernel $HOME/kernel/stormguard
+  - git clone https://github.com/techdro-id/stormguard-kernel $HOME/kernel/stormguard
 
   - git clone https://github.com/techdro-id/AnyKernel2 -b zImage $HOME/kernel/anykernel/zImage
 
@@ -23,8 +23,7 @@ before_script:
 
 script:
   - export ARCH=arm64
-  - export KERNELDIR=$HOME/kernel
-  - mkdir -p $HOME/kernel/compiled/MIUI
+  - export KERNELDIR=$HOME/kernel/stormguard
   - cd $KERNELDIR
   - bash compiled/build_miui
 
