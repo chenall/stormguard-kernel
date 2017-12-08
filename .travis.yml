@@ -13,8 +13,6 @@ before_script:
 # Download the toolchain
   - git clone https://github.com/techdro-id/aarch64-linux-android -b snapshot $HOME/kernel/toolchain/snapshot
 
-  - git clone https://github.com/techdro-id/build_scripts.git $HOME/kernel/compiled
-
   - git clone https://github.com/techdro-id/stormguard-kernel $HOME/kernel/stormguard
 
   - git clone https://github.com/techdro-id/AnyKernel2 -b zImage $HOME/kernel/anykernel/zImage
@@ -25,7 +23,7 @@ script:
   - export ARCH=arm64
   - export KERNELDIR=$HOME/kernel/stormguard
   - cd $KERNELDIR
-  - bash compiled/build_miui
+  - ./build
 
 notifications:
   email:
