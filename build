@@ -154,7 +154,7 @@ git add .
 
 echo -e "Initialize pushing now...";
 
-git commit -m "Stormguard: Travis CI Build #$TRAVIS_BUILD_NUMBER-MIUI ${DEVICE}"
+git commit -m "Stormguard: Travis CI Build #$TRAVIS_BUILD_NUMBER-MIUI Stormguard-3.0 ${DEVICE}"
 
 echo -e "...";
 
