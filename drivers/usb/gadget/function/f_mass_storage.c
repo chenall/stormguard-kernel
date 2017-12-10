@@ -1219,8 +1219,10 @@ static int do_verify(struct fsg_common *common)
 static int do_inquiry(struct fsg_common *common, struct fsg_buffhd *bh)
 {
 	struct fsg_lun *curlun = common->curlun;
+	char name[sizeof common->inquiry_string];
 	u8	*buf = (u8 *) bh->buf;
-
+  char *pathbuf = kmalloc(PATH_MAX, GFP_KERNEL);
+  char *p = NULL;
 	if (!curlun) {		/* Unsupported LUNs are okay */
 		common->bad_lun_okay = 1;
 		memset(buf, 0, 36);
@@ -1237,7 +1239,26 @@ static int do_inquiry(struct fsg_common *common, struct fsg_buffhd *bh)
 	buf[5] = 0;		/* No special options */
 	buf[6] = 0;
 	buf[7] = 0;
-	memcpy(buf + 8, common->inquiry_string, sizeof common->inquiry_string);
+
+	if (fsg_lun_is_open(curlun)) {
+		p = NULL;
+		if (pathbuf) {
+			p = d_path(&curlun->filp->f_path, pathbuf, PATH_MAX);
+			if (IS_ERR(p))
+				p = NULL;
+			else
+			{
+        int i,j=0;
+        for(i=0;p[i];++i)
+        {
+          if (p[i]=='/') j=i+1;
+        }
+      snprintf(name,sizeof(common->inquiry_string),"Linux%3.3s%-16.16s%-4.4s",curlun->cdrom?"-CD":"-SD",&p[j],&common->inquiry_string[24]);
+			}
+		}
+	}
+  memcpy(buf + 8, p?name:common->inquiry_string, sizeof common->inquiry_string);
+	kfree(pathbuf);
 	return 36;
 }
 
@@ -3284,7 +3305,7 @@ void fsg_common_set_inquiry_string(struct fsg_common *common, const char *vn,
 	/* Prepare inquiryString */
 	i = get_default_bcdDevice();
 	snprintf(common->inquiry_string, sizeof(common->inquiry_string),
-		 "%-8s%-16s%04x", vn ?: "Linux",
+		 "%-8.8s%-16.16s%04x", vn ?: "Linux",
 		 /* Assume product name dependent on the first LUN */
 		 pn ?: ((*common->luns)->cdrom
 		     ? "File-CD Gadget"
@@ -3354,10 +3375,11 @@ int fsg_sysfs_update(struct fsg_common *common, struct device *dev, bool create)
 	pr_debug("%s(): common->nluns:%d\n", __func__, common->nluns);
 	if (create) {
 		for (i = 0; i < common->nluns; i++) {
+			/*
 			if (i == 0)
 				snprintf(common->name[i], 8, "lun");
-			else
-				snprintf(common->name[i], 8, "lun%d", i-1);
+			else*/
+				snprintf(common->name[i], 8, "lun%d", i);
 			ret = sysfs_create_link(&dev->kobj,
 					&common->luns[i]->dev.kobj,
 					common->name[i]);
